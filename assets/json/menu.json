@@ -1,0 +1,25 @@
+{
+    "responseCode": "OK",
+    "OKContentMenu": {
+        "menu": [
+            {
+                "routeName": "/transactionPageScreen",
+                "imageUrl": "assets/images/transaction.png",
+                "title": "Transaction",
+                "subTitle": "Menu untuk Transaksi"
+            },
+            {
+                "routeName": "/reportPageScreen",
+                "imageUrl": "assets/images/report.png",
+                "title": "Reports",
+                "subTitle": "Lihat Laporan"
+            },
+            {
+                "routeName": "/itemsPageScreen",
+                "imageUrl": "assets/images/items.png",
+                "title": "Items",
+                "subTitle": "Mengatur Barang"
+            }
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "responseCode" : "OK",
+    "OKContentBarang": {
+        "barang" : [
+            {
+                "imageUrl": "assets/images/pocari.png",
+                "title": "Pocari Sweat",
+                "price": "9000"
+            },
+            {
+                "imageUrl": "assets/images/pocari.png",
+                "title": "Pocari Sweat",
+                "price": "9000"
+            },
+            {
+                "imageUrl": "assets/images/pocari.png",
+                "title": "Pocari Sweat",
+                "price": "9000"
+            }
+        ]
+    }
+}

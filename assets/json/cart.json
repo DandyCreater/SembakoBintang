@@ -1,0 +1,25 @@
+{
+    "responseCode" : "OK",
+    "OKContentCart" : {
+        "cart" : [
+            {
+                "imageUrl" : "assets/images/pocari.png",
+                "title" : "Pocari Sweat",
+                "price" : "9000",
+                "count" : "1"
+            },
+            {
+                "imageUrl" : "assets/images/pocari.png",
+                "title" : "Pocari Sweat B",
+                "price" : "9000",
+                "count" : "1"
+            },
+            {
+                "imageUrl" : "assets/images/pocari.png",
+                "title" : "Pocari Sweat C ",
+                "price" : "9000",
+                "count" : "1"
+            }
+        ]
+    }
+}
