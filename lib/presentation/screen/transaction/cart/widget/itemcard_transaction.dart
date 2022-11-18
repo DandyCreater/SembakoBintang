@@ -11,7 +11,7 @@ class ItemCartTransaction extends StatelessWidget {
   String? count;
   String? price;
 
-   ItemCartTransaction(
+  ItemCartTransaction(
       {required this.imageUrl,
       required this.title,
       required this.count,
@@ -23,6 +23,7 @@ class ItemCartTransaction extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Container(
+      padding: const EdgeInsets.all(10),
       width: width,
       height: height * 0.14,
       decoration: BoxDecoration(
@@ -48,8 +49,7 @@ class ItemCartTransaction extends StatelessWidget {
                 width: 100,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage(imageUrl!),
-                        fit: BoxFit.cover)),
+                        image: AssetImage(imageUrl!), fit: BoxFit.cover)),
               ),
             ),
           ),

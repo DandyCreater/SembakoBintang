@@ -24,11 +24,14 @@ class CardHomePage extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     return InkWell(
       onTap: press,
-      child: SizedBox(
+      child: Container(
         height: height * 0.3,
         width: width * 0.54,
+        decoration: BoxDecoration(
+            color: ThemeColor.whiteColor,
+            borderRadius: BorderRadius.circular(17)),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -36,7 +39,8 @@ class CardHomePage extends StatelessWidget {
                 height: height * 0.35,
                 width: width * 0.45,
                 decoration: BoxDecoration(
-                  image: DecorationImage(image: AssetImage(imageUrl!),fit: BoxFit.cover),
+                  image: DecorationImage(
+                      image: AssetImage(imageUrl!), fit: BoxFit.cover),
                   boxShadow: [
                     BoxShadow(
                         color: ThemeColor.blackColor.withOpacity(0.2),

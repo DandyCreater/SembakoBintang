@@ -9,6 +9,8 @@ import 'package:sembako_bintang/presentation/screen/report/reportpage_screen.dar
 import 'package:sembako_bintang/presentation/screen/splashscreen/get_started.dart';
 import 'package:sembako_bintang/presentation/screen/splashscreen/splashscreen.dart';
 import 'package:sembako_bintang/presentation/screen/transaction/cart/cartpage_screen.dart';
+import 'package:sembako_bintang/presentation/screen/transaction/daftar-pembayaran/daftar_pembayaran_screen.dart';
+import 'package:sembako_bintang/presentation/screen/transaction/qr/qrpage_screen.dart';
 import 'package:sembako_bintang/presentation/screen/transaction/transaction-menu/transactionpage_screen.dart';
 
 class Routes {
@@ -36,6 +38,14 @@ class Routes {
       case cartPageScreen:
         return MaterialPageRoute(
           builder: (_) => const CartPageScreen(),
+        );
+      case qrPageScreen:
+        return MaterialPageRoute(
+          builder: (_) => const QrPageScreen(),
+        );
+      case daftarPembayaranScreen:
+        return MaterialPageRoute(
+          builder: (_) => const DaftarPembayaranScreen(),
         );
 
       //Items Area

@@ -55,14 +55,17 @@ class HomePageScreen extends StatelessWidget {
                           physics: const BouncingScrollPhysics(),
                           itemCount: items!.length,
                           itemBuilder: ((context, index) {
-                            return CardHomePage(
-                                imageUrl: items[index].imageUrl,
-                                title: items[index].title,
-                                subtitle: items[index].subTitle,
-                                press: () {
-                                  Navigator.pushNamed(context,
-                                      items[index].routeName.toString());
-                                });
+                            return Container(
+                              margin: const EdgeInsets.only(left: 20),
+                              child: CardHomePage(
+                                  imageUrl: items[index].imageUrl,
+                                  title: items[index].title,
+                                  subtitle: items[index].subTitle,
+                                  press: () {
+                                    Navigator.pushNamed(context,
+                                        items[index].routeName.toString());
+                                  }),
+                            );
                           }));
                     }
                     return const SkeletonAvatar();

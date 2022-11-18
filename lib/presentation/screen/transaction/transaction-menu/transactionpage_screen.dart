@@ -58,7 +58,7 @@ class _TransactionPageScreenState extends State<TransactionPageScreen> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: height * 0.45),
+              margin: EdgeInsets.only(top: height * 0.42),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -66,11 +66,18 @@ class _TransactionPageScreenState extends State<TransactionPageScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Container(
                       width: width,
-                      height: height * 0.14,
+                      height: height * 0.15,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(17),
-                        color: ThemeColor.whiteColor,
-                      ),
+                          borderRadius: BorderRadius.circular(17),
+                          color: ThemeColor.whiteColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: ThemeColor.blackColor.withOpacity(0.2),
+                              spreadRadius: 0,
+                              blurRadius: 0,
+                              offset: const Offset(0, 1),
+                            )
+                          ]),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10),
@@ -87,8 +94,8 @@ class _TransactionPageScreenState extends State<TransactionPageScreen> {
                             TextFormField(
                               controller: searchController,
                               decoration: InputDecoration(
-                                hintText: "Search Product Here",
-                                hintStyle: ThemeText.hintText,
+                                  hintText: "Search Product Here",
+                                  hintStyle: ThemeText.hintText,
                                   contentPadding:
                                       const EdgeInsets.fromLTRB(10, 10, 8, 10),
                                   isDense: true,
@@ -159,8 +166,8 @@ class _TransactionPageScreenState extends State<TransactionPageScreen> {
                         backgroundColor:
                             MaterialStateProperty.all(ThemeColor.primaryColor)),
                     onPressed: () {},
-                    child:
-                        Text("Add to cart", style: ThemeText.buttonStartedText)),
+                    child: Text("Add to cart",
+                        style: ThemeText.buttonStartedText)),
               ),
               SizedBox(
                 height: height * 0.07,
