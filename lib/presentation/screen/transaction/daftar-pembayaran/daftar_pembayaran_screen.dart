@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
+import 'package:sembako_bintang/data/utils/helper/constanta_string.dart';
 import 'package:sembako_bintang/data/utils/themes/color.dart';
 import 'package:sembako_bintang/data/utils/themes/text.dart';
+import 'package:sembako_bintang/presentation/screen/transaction/daftar-pembayaran/detail_pembayaran_screen.dart';
 
 class DaftarPembayaranScreen extends StatefulWidget {
   const DaftarPembayaranScreen({super.key});
@@ -128,7 +130,17 @@ class _DaftarPembayaranScreenState extends State<DaftarPembayaranScreen>
                                               BorderRadius.circular(17))),
                                   backgroundColor: MaterialStateProperty.all(
                                       ThemeColor.unpaidButtonColor)),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: ((context) =>
+                                            const DetailPembayaranScreen(
+                                                orderNumber: "240",
+                                                productName: "Pocari Sweat",
+                                                qty: "1",
+                                                nominal: "12000"))));
+                              },
                               child: Text(
                                 "Unpaid",
                                 style: ThemeText.buttonStartedText,
@@ -147,106 +159,120 @@ class _DaftarPembayaranScreenState extends State<DaftarPembayaranScreen>
         physics: const BouncingScrollPhysics(),
         itemCount: 6,
         itemBuilder: ((context, index) {
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            height: height * 0.15,
-            width: width,
-            decoration: BoxDecoration(color: ThemeColor.whiteColor, boxShadow: [
-              BoxShadow(
-                color: ThemeColor.blackColor.withOpacity(0.2),
-                offset: const Offset(0, 2),
-                blurRadius: 1,
-                spreadRadius: 0,
-              )
-            ]),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  height: height * 0.15,
-                  width: width * 0.34,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 20,
-                      bottom: 20,
-                      left: 10,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Order #240",
-                          style: ThemeText.regularBold,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Number of items",
-                              style: ThemeText.regularBold,
-                            ),
-                            Text(
-                              "1",
-                              style: ThemeText.regular,
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: height * 0.15,
-                  width: width * 0.27,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 20),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        NumberFormat.currency(decimalDigits: 0, symbol: 'IDR ')
-                            .format(int.tryParse("12000")),
-                        style: ThemeText.regularBold,
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: ((context) => const DetailPembayaranScreen(
+                          orderNumber: "240",
+                          productName: "Pocari Sweat",
+                          qty: "1",
+                          nominal: "12000"))));
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              height: height * 0.15,
+              width: width,
+              decoration:
+                  BoxDecoration(color: ThemeColor.whiteColor, boxShadow: [
+                BoxShadow(
+                  color: ThemeColor.blackColor.withOpacity(0.2),
+                  offset: const Offset(0, 2),
+                  blurRadius: 1,
+                  spreadRadius: 0,
+                )
+              ]),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    height: height * 0.15,
+                    width: width * 0.34,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 20,
+                        bottom: 20,
+                        left: 10,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Order #240",
+                            style: ThemeText.regularBold,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Number of items",
+                                style: ThemeText.regularBold,
+                              ),
+                              Text(
+                                "1",
+                                style: ThemeText.regular,
+                              )
+                            ],
+                          )
+                        ],
                       ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: height * 0.15,
-                  width: width * 0.3,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 20, bottom: 15, right: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "14:10",
+                  SizedBox(
+                    height: height * 0.15,
+                    width: width * 0.27,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 20),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          NumberFormat.currency(
+                                  decimalDigits: 0, symbol: 'IDR ')
+                              .format(int.tryParse("12000")),
                           style: ThemeText.regularBold,
                         ),
-                        SizedBox(
-                          height: height * 0.05,
-                          width: width * 0.28,
-                          child: ElevatedButton(
-                              style: ButtonStyle(
-                                  shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(17))),
-                                  backgroundColor: MaterialStateProperty.all(
-                                      ThemeColor.paidButtonColor)),
-                              onPressed: () {},
-                              child: Text(
-                                "Paid",
-                                style: ThemeText.buttonStartedText,
-                              )),
-                        )
-                      ],
+                      ),
                     ),
                   ),
-                )
-              ],
+                  SizedBox(
+                    height: height * 0.15,
+                    width: width * 0.3,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(top: 20, bottom: 15, right: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "14:10",
+                            style: ThemeText.regularBold,
+                          ),
+                          SizedBox(
+                            height: height * 0.05,
+                            width: width * 0.28,
+                            child: ElevatedButton(
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(17))),
+                                    backgroundColor: MaterialStateProperty.all(
+                                        ThemeColor.paidButtonColor)),
+                                onPressed: () {},
+                                child: Text(
+                                  "Paid",
+                                  style: ThemeText.buttonStartedText,
+                                )),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         }));
@@ -302,7 +328,10 @@ class _DaftarPembayaranScreenState extends State<DaftarPembayaranScreen>
                           borderRadius: BorderRadius.circular(17))),
                       backgroundColor:
                           MaterialStateProperty.all(ThemeColor.primaryColor)),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, homepageScreen, (route) => false);
+                  },
                   child: Text(
                     "Halaman Utama",
                     style: ThemeText.buttonStartedText,

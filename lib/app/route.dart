@@ -4,8 +4,11 @@ import 'package:sembako_bintang/data/utils/helper/constanta_string.dart';
 import 'package:sembako_bintang/data/utils/themes/color.dart';
 import 'package:sembako_bintang/data/utils/themes/text.dart';
 import 'package:sembako_bintang/presentation/screen/homepage/homepage.dart';
+import 'package:sembako_bintang/presentation/screen/items/edit-item/item_edit_screen.dart';
 import 'package:sembako_bintang/presentation/screen/items/itemspage_screen.dart';
-import 'package:sembako_bintang/presentation/screen/report/reportpage_screen.dart';
+import 'package:sembako_bintang/presentation/screen/items/tambah-item/tambah_barang_screen.dart';
+import 'package:sembako_bintang/presentation/screen/report/report-page/detail_filter_report_screen.dart';
+import 'package:sembako_bintang/presentation/screen/report/report-page/reportpage_screen.dart';
 import 'package:sembako_bintang/presentation/screen/splashscreen/get_started.dart';
 import 'package:sembako_bintang/presentation/screen/splashscreen/splashscreen.dart';
 import 'package:sembako_bintang/presentation/screen/transaction/cart/cartpage_screen.dart';
@@ -24,6 +27,7 @@ class Routes {
             child: const GetStartedScreen(),
             type: PageTransitionType.rightToLeft,
             duration: const Duration(seconds: 1));
+
       //Dashboard Area
       case homepageScreen:
         return MaterialPageRoute(
@@ -53,12 +57,23 @@ class Routes {
         return MaterialPageRoute(
           builder: (_) => const ItemsPageScreen(),
         );
+      case tambahBarangScreen:
+        return MaterialPageRoute(
+          builder: (_) => const TambahBarangScreen(),
+        );
+      case itemEditScreen:
+        return MaterialPageRoute(
+          builder: (_) => const ItemEditScreen(),
+        );
 
       //Reports Page
       case reportPageScreen:
         return MaterialPageRoute(
           builder: (_) => const ReportPageScreen(),
         );
+      case detailFilterReportScreen:
+        return MaterialPageRoute(
+            builder: (_) => const DetailFilterReportScreen());
 
       default:
         return MaterialPageRoute(

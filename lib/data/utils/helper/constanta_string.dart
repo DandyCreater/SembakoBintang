@@ -13,6 +13,10 @@ const String daftarPembayaranScreen = '/daftarPembayaranScreen';
 
 //Items
 const String itemsPageScreen = '/itemsPageScreen';
+const String tambahBarangScreen = '/tambahBarangScreen';
+const String itemEditScreen = '/itemEditScreen';
+const String editItemBarangScreen = '/editItemBarangScreen';
 
 //Report
 const String reportPageScreen = '/reportPageScreen';
+const String detailFilterReportScreen = '/detailFilterReportScreen';
