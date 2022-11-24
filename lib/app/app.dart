@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sembako_bintang/app/route.dart';
 import 'package:sembako_bintang/data/utils/helper/constanta_string.dart';
-import 'package:sembako_bintang/presentation/bloc/barang-transaction/barang_transaction_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/cart-transaction/cart_transaction_bloc.dart';
+import 'package:sembako_bintang/presentation/bloc/checkout-bloc/checkout_item_bloc.dart';
+import 'package:sembako_bintang/presentation/bloc/data-transaction/data_transaction_bloc.dart';
+import 'package:sembako_bintang/presentation/bloc/get-item/get_item_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/menu-dashboard/menu_dashboard_bloc.dart';
+import 'package:sembako_bintang/presentation/bloc/reports-filter/reports_filter_bloc.dart';
+import 'package:sembako_bintang/presentation/bloc/tambah-barang/tambah_barang_bloc.dart';
 
 import 'injection_container.dart';
 
@@ -16,14 +20,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final menuDashboardBloc = sl<MenuDashboardBloc>()
       ..add(FetchMenuDashboard());
-    final barangTransactionBloc = sl<BarangTransactionBloc>()
-      ..add(FetchBarangTransaction());
-    final cartTransactionBloc = sl<CartTransactionBloc>()..add(FetchCart());
+    final cartTransactionBloc = sl<CartTransactionBloc>();
+    final tambahBarangBloc = sl<TambahBarangBloc>();
+    final listBarangBloc = sl<GetItemBloc>()..add(FetchGetItem());
+    final checkOutBloc = sl<CheckoutItemBloc>();
+    final dataTransactionBloc = sl<DataTransactionBloc>();
+    final filterDatabyDateBloc = sl<ReportsFilterBloc>();
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => menuDashboardBloc),
-        BlocProvider(create: (_) => barangTransactionBloc),
         BlocProvider(create: (_) => cartTransactionBloc),
+        BlocProvider(create: (_) => tambahBarangBloc),
+        BlocProvider(create: (_) => listBarangBloc),
+        BlocProvider(create: (_) => checkOutBloc),
+        BlocProvider(create: (_) => dataTransactionBloc),
+        BlocProvider(create: (_) => filterDatabyDateBloc)
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

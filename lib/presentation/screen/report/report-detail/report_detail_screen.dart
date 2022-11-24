@@ -7,15 +7,16 @@ import 'package:sembako_bintang/data/utils/themes/color.dart';
 import 'package:sembako_bintang/data/utils/themes/text.dart';
 
 class ReportDetailScreen extends StatelessWidget {
-  final String? orderNumber;
-  final String? productName;
-  final String? qty;
-  final String? nominal;
+  final List<dynamic> data;
+  final String orderId;
+  final String transactionDate;
+  final String priceTotal;
+
   const ReportDetailScreen(
-      {required this.orderNumber,
-      required this.productName,
-      required this.qty,
-      required this.nominal,
+      {required this.data,
+      required this.orderId,
+      required this.transactionDate,
+      required this.priceTotal,
       super.key});
 
   @override
@@ -35,14 +36,14 @@ class ReportDetailScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: ThemeColor.backgroundColor,
         title: Text(
-          "Order #$orderNumber",
+          "Order #$orderId",
           style:
               ThemeText.dashboardHeader.copyWith(color: ThemeColor.blackColor),
         ),
       ),
       backgroundColor: ThemeColor.backgroundColor,
       body: ListView.builder(
-          itemCount: 4,
+          itemCount: data.length,
           itemBuilder: ((context, index) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -63,23 +64,29 @@ class ReportDetailScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        productName!,
-                        style: ThemeText.regular,
+                      SizedBox(
+                        width: width * 0.3,
+                        child: Text(
+                          data[index]['productName'],
+                          style: ThemeText.regular,
+                        ),
                       ),
                       SizedBox(
-                          width: width * 0.4,
+                          width: width * 0.1,
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              "x${qty!}",
+                              "x${data[index]['count']}",
                               style: ThemeText.regular,
                             ),
                           )),
-                      Text(
-                        NumberFormat.currency(decimalDigits: 0, symbol: 'IDR ')
-                            .format(int.tryParse(nominal!)),
-                        style: ThemeText.regularBold,
+                      SizedBox(
+                        width: width * 0.2,
+                        child: Text(
+                          NumberFormat.currency(decimalDigits: 0, symbol: 'IDR ')
+                              .format(int.tryParse(data[index]['productPrice'])),
+                          style: ThemeText.regularBold,
+                        ),
                       )
                     ],
                   ),
@@ -122,7 +129,7 @@ class ReportDetailScreen extends StatelessWidget {
                       ),
                       SizedBox(
                         height: 20,
-                        width: width * 0.4,
+                        width: width * 0.35,
                         child: Text(
                           "Total Harga",
                           style: ThemeText.regular,
@@ -131,11 +138,11 @@ class ReportDetailScreen extends StatelessWidget {
                       ),
                       SizedBox(
                         height: 20,
-                        width: width * 0.3,
+                        width: width * 0.32,
                         child: Text(
                           NumberFormat.currency(
                                   symbol: 'IDR ', decimalDigits: 0)
-                              .format(int.tryParse("21000")),
+                              .format(int.tryParse(priceTotal)),
                           style: ThemeText.regularBold.copyWith(fontSize: 18),
                         ),
                       )
@@ -155,7 +162,7 @@ class ReportDetailScreen extends StatelessWidget {
                       ),
                       SizedBox(
                         height: 20,
-                        width: width * 0.4,
+                        width: width * 0.35,
                         child: Text(
                           "Tanggal",
                           style: ThemeText.regular,
@@ -164,9 +171,9 @@ class ReportDetailScreen extends StatelessWidget {
                       ),
                       SizedBox(
                         height: 20,
-                        width: width * 0.3,
+                        width: width * 0.32,
                         child: Text(
-                          "11-11-2022",
+                          transactionDate,
                           style: ThemeText.regularBold.copyWith(fontSize: 18),
                         ),
                       )

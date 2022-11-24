@@ -46,6 +46,13 @@ dependencies:
   intl: ^0.17.0
   qr_flutter: ^4.0.0
   flutter_svg: ^1.1.6
+  firebase_core: ^2.3.0
+  cloud_firestore: ^4.1.0
+  image_picker: ^0.8.6
+  path_provider: ^2.0.11
+  firebase_storage: ^11.0.6
+  lottie: ^2.0.0
+  network_to_file_image: ^4.0.1
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +81,7 @@ flutter:
     - assets/images/
     - assets/json/
     - assets/icon/
+    - assets/lottie/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

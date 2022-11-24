@@ -71,9 +71,9 @@ class Routes {
         return MaterialPageRoute(
           builder: (_) => const ReportPageScreen(),
         );
-      case detailFilterReportScreen:
-        return MaterialPageRoute(
-            builder: (_) => const DetailFilterReportScreen());
+      // case detailFilterReportScreen:
+      //   return MaterialPageRoute(
+      //       builder: (_) =>  DetailFilterReportScreen());
 
       default:
         return MaterialPageRoute(

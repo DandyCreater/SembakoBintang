@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:sembako_bintang/data/utils/helper/constanta_string.dart';
 import 'package:sembako_bintang/data/utils/themes/color.dart';
 import 'package:sembako_bintang/data/utils/themes/text.dart';
+import 'package:sembako_bintang/presentation/bloc/data-transaction/data_transaction_bloc.dart';
 
 class QrPageScreen extends StatelessWidget {
   const QrPageScreen({super.key});
@@ -23,37 +25,45 @@ class QrPageScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: ThemeColor.backgroundColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: height * 0.4,
-                width: width,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(17),
-                    color: ThemeColor.whiteColor),
-                child: Center(
-                  child: QrImage(
-                    data: "Testing QR",
+      body: BlocListener<DataTransactionBloc, DataTransactionState>(
+        listener: (context, state) {
+          if (state is DataTransactionSuccess) {
+            Navigator.pushNamed(context, daftarPembayaranScreen);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: height * 0.4,
+                  width: width,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(17),
+                      color: ThemeColor.whiteColor),
+                  child: Center(
+                    child: QrImage(
+                      data:
+                          "https://app.sandbox.midtrans.com/payment-links/1669274490672",
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: width,
-                height: height * 0.14,
-                child: Text(
-                  "Silahkan scan QR Code diatas untuk menyelesaikan pembayaran",
-                  style: ThemeText.dashboardHeader.copyWith(fontSize: 18),
-                  textAlign: TextAlign.center,
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-            ],
+                SizedBox(
+                  width: width,
+                  height: height * 0.14,
+                  child: Text(
+                    "Silahkan scan QR Code diatas untuk menyelesaikan pembayaran",
+                    style: ThemeText.dashboardHeader.copyWith(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -73,7 +83,8 @@ class QrPageScreen extends StatelessWidget {
                       backgroundColor:
                           MaterialStateProperty.all(ThemeColor.primaryColor)),
                   onPressed: () {
-                    Navigator.pushNamed(context, daftarPembayaranScreen);
+                    BlocProvider.of<DataTransactionBloc>(context)
+                        .add(FetchDataTransaction());
                   },
                   child: Text(
                     "Daftar Pembayaran",
