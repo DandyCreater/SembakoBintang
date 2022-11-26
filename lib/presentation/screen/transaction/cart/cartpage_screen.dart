@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sembako_bintang/data/model/transaction/checkout/checkout_response_model.dart';
+import 'package:sembako_bintang/data/model/transaction/midtrans/midtrans_response_model.dart';
 import 'package:sembako_bintang/data/utils/helper/constanta_string.dart';
 import 'package:sembako_bintang/data/utils/helper/dialog.dart';
 import 'package:sembako_bintang/data/utils/themes/color.dart';
@@ -13,6 +14,7 @@ import 'package:sembako_bintang/data/utils/themes/text.dart';
 import 'package:sembako_bintang/presentation/bloc/cart-transaction/cart_transaction_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/checkout-bloc/checkout_item_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/get-item/get_item_bloc.dart';
+import 'package:sembako_bintang/presentation/bloc/midtrans-transaction/midtrans_bloc.dart';
 import 'package:sembako_bintang/presentation/screen/transaction/cart/widget/itemcard_transaction.dart';
 import 'package:skeletons/skeletons.dart';
 
@@ -129,55 +131,68 @@ class _CartPageScreenState extends State<CartPageScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    BlocListener<CheckoutItemBloc, CheckoutItemState>(
+                    BlocListener<MidtransBloc, MidtransState>(
                       listener: (context, state) {
-                        if (state is CheckoutItemSuccess) {
-                          setState(() {
-                            finalPrice = 0;
-                          });
-                          BlocProvider.of<CheckoutItemBloc>(context)
-                              .add(ClearCartData());
+                        if(state is MidtransLoading){
+                          dialog.loadingDialog(context, height, width);
+                          Future.delayed(const Duration(seconds: 2));
+                        }
+                        if (state is MidtransSuccess) {
+                          Navigator.pop(context);
                           Navigator.pushNamed(context, qrPageScreen);
                         }
                       },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          BlocBuilder<CartTransactionBloc,
-                              CartTransactionState>(
-                            builder: (context, state) {
-                              if (state is GetCartSuccess) {
-                                var items = state.cartItem;
+                      child: BlocListener<CheckoutItemBloc, CheckoutItemState>(
+                        listener: (context, state) {
+                          if (state is CheckoutItemSuccess) {
+                            setState(() {
+                              finalPrice = 0;
+                            });
+                            BlocProvider.of<MidtransBloc>(context)
+                                .add(StartMidtransTransaction());
+                            BlocProvider.of<CheckoutItemBloc>(context)
+                                .add(ClearCartData());
+                          }
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            BlocBuilder<CartTransactionBloc,
+                                CartTransactionState>(
+                              builder: (context, state) {
+                                if (state is GetCartSuccess) {
+                                  var items = state.cartItem;
 
-                                for (var i = 0; i < items.length; i++) {
-                                  finalPrice =
-                                      int.tryParse(items[i].finalPrice!);
-                                  listPrice.add(finalPrice);
+                                  for (var i = 0; i < items.length; i++) {
+                                    finalPrice =
+                                        int.tryParse(items[i].finalPrice!);
+                                    listPrice.add(finalPrice);
+                                  }
+
+                                  priceFinal = listPrice.reduce(
+                                      ((value, element) => value + element));
+
+                                  return Text(
+                                    NumberFormat.currency(
+                                            symbol: 'IDR ', decimalDigits: 0)
+                                        .format(priceFinal),
+                                    style: ThemeText.regularBold
+                                        .copyWith(fontSize: 16),
+                                  );
                                 }
-
-                                priceFinal = listPrice.reduce(
-                                    ((value, element) => value + element));
-
-                                return Text(
-                                  NumberFormat.currency(
-                                          symbol: 'IDR ', decimalDigits: 0)
-                                      .format(priceFinal),
-                                  style: ThemeText.regularBold
-                                      .copyWith(fontSize: 16),
+                                return SizedBox(
+                                  width: width * 0.15,
+                                  height: 20,
+                                  child: const SkeletonAvatar(),
                                 );
-                              }
-                              return SizedBox(
-                                width: width * 0.15,
-                                height: 20,
-                                child: const SkeletonAvatar(),
-                              );
-                            },
-                          ),
-                          Text(
-                            "Total Harga",
-                            style: ThemeText.dashboardSubHeader,
-                          )
-                        ],
+                              },
+                            ),
+                            Text(
+                              "Total Harga",
+                              style: ThemeText.dashboardSubHeader,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     Align(

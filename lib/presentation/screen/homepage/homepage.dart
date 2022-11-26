@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:sembako_bintang/data/utils/helper/constanta_string.dart';
 import 'package:sembako_bintang/data/utils/themes/color.dart';
 import 'package:sembako_bintang/data/utils/themes/text.dart';
@@ -82,26 +87,28 @@ class HomePageScreen extends StatelessWidget {
               SizedBox(
                 height: height * 0.1,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SizedBox(
-                  height: height * 0.07,
-                  width: width * 0.6,
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(17))),
-                          backgroundColor: MaterialStateProperty.all(
-                              ThemeColor.primaryColor)),
-                      onPressed: () {
-                        BlocProvider.of<DataTransactionBloc>(context)
-                            .add(FetchDataTransaction());
-                      },
-                      child: Text(
-                        "Daftar Pembayaran",
-                        style: ThemeText.buttonStartedText,
-                      )),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: SizedBox(
+                    height: height * 0.07,
+                    width: width * 0.6,
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(17))),
+                            backgroundColor: MaterialStateProperty.all(
+                                ThemeColor.primaryColor)),
+                        onPressed: () {
+                          BlocProvider.of<DataTransactionBloc>(context)
+                              .add(FetchDataTransaction());
+                        },
+                        child: Text(
+                          "Daftar Pembayaran",
+                          style: ThemeText.buttonStartedText,
+                        )),
+                  ),
                 ),
               )
             ],

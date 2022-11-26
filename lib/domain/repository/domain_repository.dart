@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:sembako_bintang/data/model/transaction/cart/cart_responses_model.dart';
 import 'package:sembako_bintang/data/model/transaction/checkout/checkout_response_model.dart';
+import 'package:sembako_bintang/data/model/transaction/midtrans/midtrans_response_model.dart';
 import 'package:sembako_bintang/data/utils/helper/failure.dart';
 import 'package:sembako_bintang/domain/entity/items/items_entity.dart';
+import 'package:sembako_bintang/domain/entity/midtrans/midtrans_entity.dart';
 import 'package:sembako_bintang/domain/entity/transaction/barang/barang_entity.dart';
 import 'package:sembako_bintang/domain/entity/transaction/cart/cart_entity.dart';
 import 'package:sembako_bintang/domain/entity/transaction/data-transaction/data_transaction_entity.dart';
@@ -42,6 +44,7 @@ abstract class DomainRepository {
   Future<Either<ServerFailure, String>> clearCartItems();
   Future<Either<ServerFailure, List<DataTransactionEntity>>>
       getDataTransaction();
+  Future<Either<ServerFailure, MidtransEntity>> midTransGenerate();
 
   //Reports
   Future<Either<ServerFailure, List<DataTransactionEntity>>> filterItemByDate(

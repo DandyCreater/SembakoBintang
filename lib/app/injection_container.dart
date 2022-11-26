@@ -10,11 +10,13 @@ import 'package:sembako_bintang/domain/usecase/report/filter_data_bydate_usecase
 import 'package:sembako_bintang/domain/usecase/transaction/cart/cart_usecase.dart';
 import 'package:sembako_bintang/domain/usecase/transaction/checkout/checkout_usecase.dart';
 import 'package:sembako_bintang/domain/usecase/transaction/data-transaction/data_transaction_usecase.dart';
+import 'package:sembako_bintang/domain/usecase/transaction/midtrans/midtrans_usecase.dart';
 import 'package:sembako_bintang/presentation/bloc/cart-transaction/cart_transaction_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/checkout-bloc/checkout_item_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/data-transaction/data_transaction_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/get-item/get_item_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/menu-dashboard/menu_dashboard_bloc.dart';
+import 'package:sembako_bintang/presentation/bloc/midtrans-transaction/midtrans_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/reports-filter/reports_filter_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/tambah-barang/tambah_barang_bloc.dart';
 
@@ -34,6 +36,7 @@ Future<void> init(String baseUrl) async {
   sl.registerFactory(() => CheckoutItemBloc(sl(), sl()));
   sl.registerFactory(() => DataTransactionBloc(sl()));
   sl.registerFactory(() => ReportsFilterBloc(sl()));
+  sl.registerFactory(() => MidtransBloc(sl()));
 
   //UseCase Area
   //Dashboard Usecase
@@ -55,7 +58,7 @@ Future<void> init(String baseUrl) async {
   sl.registerLazySingleton(() => CheckOutItemUseCase(sl()));
   sl.registerLazySingleton(() => ClearCartItemsUseCase(sl()));
   sl.registerLazySingleton(() => DataTransactionUseCase(sl()));
-
+  sl.registerLazySingleton(() => MidtransUseCase(sl()));
   //Reports UseCase
   sl.registerLazySingleton(() => FilterDataByDateUseCase(sl()));
 

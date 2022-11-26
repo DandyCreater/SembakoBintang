@@ -54,7 +54,7 @@ class GetItemBloc extends Bloc<GetItemEvent, GetItemState> {
     });
 
     on<DeleteItem>((event, emit) async {
-      emit(GetItemLoading());
+      // emit(GetItemLoading());
       try {
         final result = await deleteItemUseCase.execute(event.itemsId);
         result.fold((failure) {
@@ -68,7 +68,7 @@ class GetItemBloc extends Bloc<GetItemEvent, GetItemState> {
     });
 
     on<UpdateDataItem>((event, emit) async {
-      emit(GetItemLoading());
+      // emit(GetItemLoading());
       try {
         final result = await updateDataItemUseCase.execute(
             event.dataItem!, event.imageFile!);

@@ -13,11 +13,14 @@ import 'package:sembako_bintang/data/model/transaction/data-transaction/data_tra
 import 'package:sembako_bintang/data/utils/helper/failure.dart';
 import 'package:sembako_bintang/domain/entity/dashboard/menu_entity.dart';
 import 'package:sembako_bintang/domain/entity/items/items_entity.dart';
+import 'package:sembako_bintang/domain/entity/midtrans/midtrans_entity.dart';
 import 'package:sembako_bintang/domain/entity/transaction/barang/barang_entity.dart';
 import 'package:sembako_bintang/domain/entity/transaction/cart/cart_entity.dart';
 import 'package:sembako_bintang/domain/entity/transaction/data-transaction/data_transaction_entity.dart';
 import 'package:sembako_bintang/domain/repository/domain_repository.dart';
 import 'package:sembako_bintang/presentation/bloc/checkout-bloc/checkout_item_bloc.dart';
+
+import '../model/transaction/midtrans/midtrans_response_model.dart';
 
 class DataRepositoryImpl extends DomainRepository {
   final LocalDataSources localDataSources;
@@ -244,6 +247,21 @@ class DataRepositoryImpl extends DomainRepository {
     } catch (e) {
       return Left(
           ServerFailure("Catch Clear Cart Items Error Data Repository $e"));
+    }
+  }
+
+  @override
+  Future<Either<ServerFailure, MidtransEntity>> midTransGenerate() async {
+    try {
+      MidtransResponseModel result = await remoteDataSources.generateMidTrans();
+      if (result != null) {
+        return right(result.toEntity());
+      } else {
+        return left(ServerFailure("Generate MidTrans Error"));
+      }
+    } catch (e) {
+      debugPrint("Generate MidTrans Error Data Repository $e");
+      return Left(ServerFailure("Generate MidTrans Error Data Repository $e"));
     }
   }
 

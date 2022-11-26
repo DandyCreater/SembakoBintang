@@ -105,192 +105,212 @@ class _ReportPageScreenState extends State<ReportPageScreen> {
       }
     }
 
-    return Scaffold(
-      backgroundColor: ThemeColor.backgroundColor,
-      body: SingleChildScrollView(
-        child: BlocListener<ReportsFilterBloc, ReportsFilterState>(
-          listener: (context, state) {
-            if (state is ReportsFilterSuccess) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: ((context) => DetailFilterReportScreen(
-                          startDateTime: startDateTime.toString(),
-                          endDateTime: endDateTimeFormat.toString()))));
-            }
-          },
-          child: Stack(
-            children: [
-              Container(
-                height: height * 0.5,
-                width: width,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/images/report_bg.png"),
-                      fit: BoxFit.cover),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: ThemeColor.backgroundColor,
+        body: SingleChildScrollView(
+          child: BlocListener<ReportsFilterBloc, ReportsFilterState>(
+            listener: (context, state) {
+              if (state is ReportsFilterSuccess) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: ((context) => DetailFilterReportScreen(
+                            startDateTime: startDateTime.toString(),
+                            endDateTime: endDateTimeFormat.toString()))));
+              }
+            },
+            child: Stack(
+              children: [
+                Container(
+                  height: height * 0.5,
+                  width: width,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/images/report_bg.png"),
+                        fit: BoxFit.cover),
+                  ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 20, top: height * 0.32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Reports",
-                      style: ThemeText.dashboardHeader
-                          .copyWith(color: ThemeColor.whiteColor),
-                    ),
-                    Text(
-                      "Silahkan fliter tanggalnya",
-                      style: ThemeText.dashboardSubHeader
-                          .copyWith(color: ThemeColor.whiteColor),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: height * 0.42),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
+                Container(
+                  margin: EdgeInsets.only(left: 20, top: height * 0.32),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Reports",
+                        style: ThemeText.dashboardHeader
+                            .copyWith(color: ThemeColor.whiteColor),
                       ),
-                      child: Container(
-                        width: width,
-                        height: height * 0.42,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(17),
-                            color: ThemeColor.whiteColor,
-                            boxShadow: [
-                              BoxShadow(
-                                color: ThemeColor.blackColor.withOpacity(0.2),
-                                spreadRadius: 1,
-                                blurRadius: 1,
-                                offset: const Offset(0, 1),
-                              )
-                            ]),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Tanggal",
-                                style: ThemeText.regular,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                onTap: () => selectStartDate(context),
-                                readOnly: true,
-                                controller: startDateTimeController,
-                                decoration: InputDecoration(
-                                    hintText:
-                                        "${dateFormat.format(startDateTime.toLocal()).split(" ")[0]}",
-                                    hintStyle: ThemeText.regular,
-                                    contentPadding: const EdgeInsets.fromLTRB(
-                                        10, 20, 8, 20),
-                                    isDense: true,
-                                    isCollapsed: true,
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(17),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color:
-                                              ThemeColor.activeTextFieldColor),
-                                      borderRadius: BorderRadius.circular(17),
-                                    )),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Center(
-                                child: Text(
-                                  "Sampai",
+                      Text(
+                        "Silahkan fliter tanggalnya",
+                        style: ThemeText.dashboardSubHeader
+                            .copyWith(color: ThemeColor.whiteColor),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: height * 0.42),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                        ),
+                        child: Container(
+                          width: width,
+                          height: height * 0.42,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(17),
+                              color: ThemeColor.whiteColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: ThemeColor.blackColor.withOpacity(0.2),
+                                  spreadRadius: 1,
+                                  blurRadius: 1,
+                                  offset: const Offset(0, 1),
+                                )
+                              ]),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Tanggal",
                                   style: ThemeText.regular,
                                 ),
-                              ),
-                              Text(
-                                "Tanggal",
-                                style: ThemeText.regular,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                onTap: () => selectEndDate(context),
-                                readOnly: true,
-                                controller: endDateTimeController,
-                                decoration: InputDecoration(
-                                    hintText:
-                                        "${dateFormat.format(endDateTime.toLocal()).split(" ")[0]}",
-                                    hintStyle: ThemeText.regular,
-                                    contentPadding: const EdgeInsets.fromLTRB(
-                                        10, 20, 8, 20),
-                                    isDense: true,
-                                    isCollapsed: true,
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(17),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color:
-                                              ThemeColor.activeTextFieldColor),
-                                      borderRadius: BorderRadius.circular(17),
-                                    )),
-                              ),
-                            ],
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                TextFormField(
+                                  onTap: () => selectStartDate(context),
+                                  readOnly: true,
+                                  controller: startDateTimeController,
+                                  decoration: InputDecoration(
+                                      hintText:
+                                          "${dateFormat.format(startDateTime.toLocal()).split(" ")[0]}",
+                                      hintStyle: ThemeText.regular,
+                                      contentPadding: const EdgeInsets.fromLTRB(
+                                          10, 20, 8, 20),
+                                      isDense: true,
+                                      isCollapsed: true,
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(17),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color:
+                                                ThemeColor.activeTextFieldColor),
+                                        borderRadius: BorderRadius.circular(17),
+                                      )),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Center(
+                                  child: Text(
+                                    "Sampai",
+                                    style: ThemeText.regular,
+                                  ),
+                                ),
+                                Text(
+                                  "Tanggal",
+                                  style: ThemeText.regular,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                TextFormField(
+                                  onTap: () => selectEndDate(context),
+                                  readOnly: true,
+                                  controller: endDateTimeController,
+                                  decoration: InputDecoration(
+                                      hintText:
+                                          "${dateFormat.format(endDateTime.toLocal()).split(" ")[0]}",
+                                      hintStyle: ThemeText.regular,
+                                      contentPadding: const EdgeInsets.fromLTRB(
+                                          10, 20, 8, 20),
+                                      isDense: true,
+                                      isCollapsed: true,
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(17),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color:
+                                                ThemeColor.activeTextFieldColor),
+                                        borderRadius: BorderRadius.circular(17),
+                                      )),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: SizedBox(
+                    height: height * 0.15,
+                    width: width * 0.12,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: ThemeColor.blackColor,
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, homepageScreen, (route) => false);
+                      },
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
-      ),
-      bottomNavigationBar: SizedBox(
-        height: height * 0.15,
-        width: width,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: width * 0.3, vertical: height * 0.04),
-          child: SizedBox(
-            height: height * 0.07,
-            width: width * 0.1,
-            child: ElevatedButton(
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(17))),
-                    backgroundColor:
-                        MaterialStateProperty.all(ThemeColor.primaryColor)),
-                onPressed: () {
-                  if (startDateTime.compareTo(endDateTime) > 0) {
-                    failedDialog(context, "Tanggal Awal Salah",
-                        "Format Tanggal Salah !");
-                  }
-                  if (endDateTime.compareTo(DateTime.now()) > 0) {
-                    failedDialog(context, "Tanggal Akhir Salah",
-                        "Format Tanggal Salah !");
-                  }
-                  if (startDateTime.compareTo(endDateTime) < 0 &&
-                      endDateTime.compareTo(DateTime.now()) <= 0) {
-                    BlocProvider.of<ReportsFilterBloc>(context).add(
-                        StartFilterByDate(
-                            startDate: startDateTime, endDate: endDateTime));
-                  }
-                },
-                child: Text(
-                  "Search",
-                  style: ThemeText.buttonStartedText,
-                )),
+        bottomNavigationBar: SizedBox(
+          height: height * 0.15,
+          width: width,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: width * 0.3, vertical: height * 0.04),
+            child: SizedBox(
+              height: height * 0.07,
+              width: width * 0.1,
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(17))),
+                      backgroundColor:
+                          MaterialStateProperty.all(ThemeColor.primaryColor)),
+                  onPressed: () {
+                    if (startDateTime.compareTo(endDateTime) > 0) {
+                      failedDialog(context, "Tanggal Awal Salah",
+                          "Format Tanggal Salah !");
+                    }
+                    if (endDateTime.compareTo(DateTime.now()) > 0) {
+                      failedDialog(context, "Tanggal Akhir Salah",
+                          "Format Tanggal Salah !");
+                    }
+                    if (startDateTime.compareTo(endDateTime) < 0 &&
+                        endDateTime.compareTo(DateTime.now()) <= 0) {
+                      BlocProvider.of<ReportsFilterBloc>(context).add(
+                          StartFilterByDate(
+                              startDate: startDateTime, endDate: endDateTime));
+                    }
+                  },
+                  child: Text(
+                    "Search",
+                    style: ThemeText.buttonStartedText,
+                  )),
+            ),
           ),
         ),
       ),

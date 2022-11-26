@@ -4,14 +4,17 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:sembako_bintang/data/model/items/items_response_model.dart';
 import 'package:sembako_bintang/data/model/transaction/cart/cart_responses_model.dart';
 import 'package:sembako_bintang/data/model/transaction/checkout/checkout_response_model.dart';
 import 'package:sembako_bintang/data/model/transaction/data-transaction/data_transaction_response_model.dart';
+import 'package:sembako_bintang/data/model/transaction/midtrans/midtrans_response_model.dart';
 import 'package:sembako_bintang/domain/entity/items/items_entity.dart';
 
 abstract class RemoteDataSources {
@@ -33,6 +36,7 @@ abstract class RemoteDataSources {
   Future checkOutItem(CheckOutParameterPost value);
   Future clearCartItem();
   Future getTransactionData();
+  Future generateMidTrans();
 
   //Reports Area
   Future filterDatabyDate(DateTime startDate, DateTime endDate);
@@ -40,6 +44,7 @@ abstract class RemoteDataSources {
 
 class RemoteDataSourcesImpl implements RemoteDataSources {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final storage = const FlutterSecureStorage();
 
   //Items Area
   //Get Data and Filter
@@ -359,6 +364,11 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
         'data': dataCart.map((e) => e.toMap()).toList(),
       };
 
+      storage.write(
+        key: 'transactionKey',
+        value: jsonEncode(data),
+        aOptions: AndroidOptions.defaultOptions,
+      );
       await collectionReference.add(data);
       result = "OK";
       return result;
@@ -415,6 +425,77 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
     }
   }
 
+  @override
+  Future generateMidTrans() async {
+    Dio dio = Dio();
+    DateTime dateTime = DateTime.now();
+
+    try {
+      var dateFormatted =
+          DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(DateTime.now());
+      String baseUrl = 'https://api.sandbox.midtrans.com/v1/payment-links';
+      String serverKey = 'SB-Mid-server-ibfdMYRRgJQDz05rw2isTi1E';
+      String serverData = base64.encode(serverKey.codeUnits);
+
+      String? data = await storage.read(
+          key: 'transactionKey', aOptions: AndroidOptions.defaultOptions);
+      final jsonData = jsonDecode(data!);
+
+      List listItemTransaction = await jsonData['data']
+          .map((e) => ItemsParamaterPost.fromJson(e))
+          .toList();
+
+      var envelope = {
+        "transaction_details": {
+          "order_id": "sembakobintang-${jsonData['orderId']}",
+          "gross_amount": int.tryParse(jsonData['totalPrice']),
+          "payment_link_id": "for-sembakobintang-${jsonData['orderId']}"
+        },
+        "credit_card": {"secure": true},
+        "usage_limit": 1,
+        "expiry": {
+          "start_time": "$dateFormatted",
+          "duration": 20,
+          "unit": "days"
+        },
+        "enabled_payments": ["credit_card", "bca_va", "indomaret"],
+        "item_details": listItemTransaction.map((e) => e.toMap()).toList(),
+        "customer_details": {
+          "first_name": "Michael",
+          "last_name": "Julian",
+          "email": "michael.julian@gmail.com",
+          "phone": "+62181128473821",
+          "notes":
+              "Thank you for your purchase. Please follow the instructions to pay."
+        },
+        "custom_field1": "",
+        "custom_field2": "",
+        "custom_field3": ""
+      };
+
+      var response = await dio.post(
+        baseUrl,
+        options: Options(headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic $serverData',
+        }),
+        data: envelope,
+      );
+
+      if (response.statusCode == 200) {
+        var result = MidtransResponseModel.fromJson(response.data);
+
+        return result;
+      } else {
+        debugPrint(response.toString());
+      }
+    } catch (e) {
+      debugPrint("Generate MidTrans Error $e");
+      return e;
+    }
+  }
+
   //Reports Area
   @override
   Future filterDatabyDate(DateTime startDate, DateTime endDate) async {
@@ -428,7 +509,8 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
       var output = <DataTransactionResponseModel>[];
       var dateFormat = DateFormat('y-MM-dd');
       for (var i = 0; i < allData.length; i += 1) {
-        var date = dateFormat.parse(allData[i].transactionDate!.substring(0,10), true);
+        var date = dateFormat.parse(
+            allData[i].transactionDate!.substring(0, 10), true);
         if (date.compareTo(startDate) >= 0 && date.compareTo(endDate) <= 0) {
           output.add(allData[i]);
         }
@@ -438,7 +520,6 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
     } catch (e) {
       debugPrint("Filter Data by Date Error $e");
       return e;
-
     }
   }
 }

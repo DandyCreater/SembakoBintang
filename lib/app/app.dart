@@ -7,6 +7,7 @@ import 'package:sembako_bintang/presentation/bloc/checkout-bloc/checkout_item_bl
 import 'package:sembako_bintang/presentation/bloc/data-transaction/data_transaction_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/get-item/get_item_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/menu-dashboard/menu_dashboard_bloc.dart';
+import 'package:sembako_bintang/presentation/bloc/midtrans-transaction/midtrans_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/reports-filter/reports_filter_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/tambah-barang/tambah_barang_bloc.dart';
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
     final checkOutBloc = sl<CheckoutItemBloc>();
     final dataTransactionBloc = sl<DataTransactionBloc>();
     final filterDatabyDateBloc = sl<ReportsFilterBloc>();
+    final midTransBloc = sl<MidtransBloc>();
 
     return MultiBlocProvider(
       providers: [
@@ -35,7 +37,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => listBarangBloc),
         BlocProvider(create: (_) => checkOutBloc),
         BlocProvider(create: (_) => dataTransactionBloc),
-        BlocProvider(create: (_) => filterDatabyDateBloc)
+        BlocProvider(create: (_) => filterDatabyDateBloc),
+        BlocProvider(create: (_) => midTransBloc)
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

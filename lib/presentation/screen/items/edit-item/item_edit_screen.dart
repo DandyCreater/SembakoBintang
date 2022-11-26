@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sembako_bintang/data/utils/helper/constanta_string.dart';
+import 'package:sembako_bintang/data/utils/helper/dialog.dart';
 import 'package:sembako_bintang/data/utils/themes/color.dart';
 import 'package:sembako_bintang/data/utils/themes/text.dart';
 import 'package:sembako_bintang/domain/entity/items/items_entity.dart';
@@ -28,6 +29,7 @@ class _ItemEditScreenState extends State<ItemEditScreen> {
   String itemsId = "";
   final searchController = TextEditingController();
   ItemsEntity? itemsData;
+  final dialog = DialogHelper();
   @override
   void initState() {
     // TODO: implement initState
@@ -172,10 +174,21 @@ class _ItemEditScreenState extends State<ItemEditScreen> {
                         TextFormField(
                           controller: searchController,
                           onChanged: (value) {
-                            BlocProvider.of<GetItemBloc>(context).add(
-                                SearchItem(itemName: searchController.text));
+                            if (value.isEmpty) {
+                              BlocProvider.of<GetItemBloc>(context)
+                                  .add(FetchGetItem());
+                            }
+                            // BlocProvider.of<GetItemBloc>(context).add(
+                            //     SearchItem(itemName: searchController.text));
                           },
                           decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                  onPressed: () {
+                                    BlocProvider.of<GetItemBloc>(context).add(
+                                        SearchItem(
+                                            itemName: searchController.text));
+                                  },
+                                  icon: const Icon(Icons.search)),
                               isDense: true,
                               isCollapsed: true,
                               contentPadding:

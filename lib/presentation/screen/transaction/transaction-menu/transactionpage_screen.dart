@@ -33,11 +33,11 @@ class _TransactionPageScreenState extends State<TransactionPageScreen> {
   String listString = '[]';
   int cartCount = 0;
 
-  // @override
-  // void initState() {
-  //   BlocProvider.of<GetItemBloc>(context).add(FetchGetItem());
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    BlocProvider.of<GetItemBloc>(context).add(FetchGetItem());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,192 +95,218 @@ class _TransactionPageScreenState extends State<TransactionPageScreen> {
               BlocProvider.of<GetItemBloc>(context).add(FetchGetItem());
             }
           },
-          child: Stack(
-            children: [
-              Container(
-                height: height * 0.5,
-                width: width,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/images/transaction_bg.png"),
-                      fit: BoxFit.cover),
+          child: BlocListener<GetItemBloc, GetItemState>(
+            listener: (context, state) {
+              if (state is GetItemLoading) {
+                dialog.loadingDialog(context, height, width);
+
+                Future.delayed(const Duration(milliseconds: 500))
+                    .then((value) => Navigator.pop(context));
+              }
+            },
+            child: Stack(
+              children: [
+                Container(
+                  height: height * 0.5,
+                  width: width,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/images/transaction_bg.png"),
+                        fit: BoxFit.cover),
+                  ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 20, top: height * 0.32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Transaction",
-                      style: ThemeText.dashboardHeader
-                          .copyWith(color: ThemeColor.whiteColor),
-                    ),
-                    Text(
-                      "Silahkan pilih barangnya",
-                      style: ThemeText.dashboardSubHeader
-                          .copyWith(color: ThemeColor.whiteColor),
-                    ),
-                  ],
+                Container(
+                  margin: EdgeInsets.only(left: 20, top: height * 0.32),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Transaction",
+                        style: ThemeText.dashboardHeader
+                            .copyWith(color: ThemeColor.whiteColor),
+                      ),
+                      Text(
+                        "Silahkan pilih barangnya",
+                        style: ThemeText.dashboardSubHeader
+                            .copyWith(color: ThemeColor.whiteColor),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: height * 0.42),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Container(
-                        width: width,
-                        height: height * 0.15,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(17),
-                            color: ThemeColor.whiteColor,
-                            boxShadow: [
-                              BoxShadow(
-                                color: ThemeColor.blackColor.withOpacity(0.2),
-                                spreadRadius: 0,
-                                blurRadius: 0,
-                                offset: const Offset(0, 1),
-                              )
-                            ]),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Search",
-                                style: ThemeText.regular,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                controller: searchController,
-                                onChanged: (value) {
-                                  BlocProvider.of<GetItemBloc>(context).add(
-                                      SearchItem(
-                                          itemName: searchController.text));
-                                },
-                                decoration: InputDecoration(
-                                    hintText: "Search Product Here",
-                                    hintStyle: ThemeText.hintText,
-                                    contentPadding: const EdgeInsets.fromLTRB(
-                                        10, 10, 8, 10),
-                                    isDense: true,
-                                    isCollapsed: true,
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(17),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color:
-                                              ThemeColor.activeTextFieldColor),
-                                      borderRadius: BorderRadius.circular(17),
-                                    )),
-                              ),
-                            ],
+                Container(
+                  margin: EdgeInsets.only(top: height * 0.42),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Container(
+                          width: width,
+                          height: height * 0.15,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(17),
+                              color: ThemeColor.whiteColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: ThemeColor.blackColor.withOpacity(0.2),
+                                  spreadRadius: 0,
+                                  blurRadius: 0,
+                                  offset: const Offset(0, 1),
+                                )
+                              ]),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Search",
+                                  style: ThemeText.regular,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                TextFormField(
+                                  controller: searchController,
+                                  onChanged: (value) {
+                                    if (value.isEmpty) {
+                                      BlocProvider.of<GetItemBloc>(context)
+                                          .add(FetchGetItem());
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                      suffixIcon: IconButton(
+                                          onPressed: () {
+                                            BlocProvider.of<GetItemBloc>(
+                                                    context)
+                                                .add(SearchItem(
+                                                    itemName:
+                                                        searchController.text));
+                                          },
+                                          icon: const Icon(Icons.search)),
+                                      hintText: "Search Product Here",
+                                      hintStyle: ThemeText.hintText,
+                                      contentPadding: const EdgeInsets.fromLTRB(
+                                          10, 13, 8, 10),
+                                      isDense: true,
+                                      isCollapsed: true,
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(17),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: ThemeColor
+                                                .activeTextFieldColor),
+                                        borderRadius: BorderRadius.circular(17),
+                                      )),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: height * 0.42,
-                      child: BlocBuilder<GetItemBloc, GetItemState>(
-                        builder: (context, state) {
-                          if (state is GetItemSuccess) {
-                            var items = state.itemsEntity;
-                            return GridView.builder(
-                                scrollDirection: Axis.vertical,
-                                physics: const BouncingScrollPhysics(),
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisSpacing: 10,
-                                        childAspectRatio: 1.5 / 2,
-                                        mainAxisSpacing: 10,
-                                        crossAxisCount: 2),
-                                itemCount: items!.length,
-                                itemBuilder: (BuildContext context, index) {
-                                  return Container(
-                                    margin: const EdgeInsets.only(left: 20),
-                                    child: TransactionItemCard(
-                                      addCart: items[index].addCart!,
-                                      imageUrl: items[index].productImage,
-                                      title: items[index].productName,
-                                      price: items[index].price,
-                                      press: () async {
-                                        if (items[index].addCart == false) {
-                                          setState(() {
-                                            items[index].addCart = true;
-                                            BlocProvider.of<
-                                                        CartTransactionBloc>(
-                                                    context)
-                                                .add(FetchCart(
-                                                    value:
-                                                        CartParamaterPost(
-                                                            count: "1",
-                                                            productName: items[
-                                                                    index]
-                                                                .productName,
-                                                            productPrice:
-                                                                items[index]
-                                                                    .price,
-                                                            itemsId:
-                                                                items[index].id,
-                                                            imageItem: items[
-                                                                    index]
-                                                                .productImage,
-                                                            priceTotal: ''),
-                                                    addCart: true,
-                                                    itemsId: items[index].id));
-                                            itemsId =
-                                                items[index].id.toString();
-                                            listScreen.add(itemsId);
-                                            listString = listScreen.toString();
-                                          });
-                                        } else {
-                                          setState(() {
-                                            items[index].addCart = false;
-                                            itemsId =
-                                                items[index].id.toString();
-
-                                            BlocProvider.of<
-                                                        CartTransactionBloc>(
-                                                    context)
-                                                .add(DeleteCart(
-                                                    itemsId: itemsId!,
-                                                    addCart: false));
-
-                                            listScreen.remove(itemsId);
-                                            listString = listScreen.toString();
-                                          });
-                                        }
-                                      },
-                                    ),
-                                  );
-                                });
-                          }
-                          return Container(
-                              color: Colors.transparent,
-                              height: height * 0.42,
-                              width: width,
-                              child: Center(
-                                child:
-                                    Lottie.asset('assets/lottie/loading.json'),
-                              ));
-                        },
+                      const SizedBox(
+                        height: 20,
                       ),
-                    )
-                  ],
+                      SizedBox(
+                        height: height * 0.42,
+                        child: BlocBuilder<GetItemBloc, GetItemState>(
+                          builder: (context, state) {
+                            if (state is GetItemSuccess) {
+                              var items = state.itemsEntity;
+                              return GridView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  physics: const BouncingScrollPhysics(),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisSpacing: 10,
+                                          childAspectRatio: 1.5 / 2,
+                                          mainAxisSpacing: 10,
+                                          crossAxisCount: 2),
+                                  itemCount: items!.length,
+                                  itemBuilder: (BuildContext context, index) {
+                                    return Container(
+                                      margin: const EdgeInsets.only(left: 20),
+                                      child: TransactionItemCard(
+                                        addCart: items[index].addCart!,
+                                        imageUrl: items[index].productImage,
+                                        title: items[index].productName,
+                                        price: items[index].price,
+                                        press: () async {
+                                          if (items[index].addCart == false) {
+                                            setState(() {
+                                              items[index].addCart = true;
+                                              BlocProvider
+                                                      .of<
+                                                              CartTransactionBloc>(
+                                                          context)
+                                                  .add(FetchCart(
+                                                      value:
+                                                          CartParamaterPost(
+                                                              count: "1",
+                                                              productName: items[
+                                                                      index]
+                                                                  .productName,
+                                                              productPrice:
+                                                                  items[
+                                                                          index]
+                                                                      .price,
+                                                              itemsId: items[
+                                                                      index]
+                                                                  .id,
+                                                              imageItem: items[
+                                                                      index]
+                                                                  .productImage,
+                                                              priceTotal: ''),
+                                                      addCart: true,
+                                                      itemsId:
+                                                          items[index].id));
+                                              itemsId =
+                                                  items[index].id.toString();
+                                              listScreen.add(itemsId);
+                                              listString =
+                                                  listScreen.toString();
+                                            });
+                                          } else {
+                                            setState(() {
+                                              items[index].addCart = false;
+                                              itemsId =
+                                                  items[index].id.toString();
+
+                                              BlocProvider.of<
+                                                          CartTransactionBloc>(
+                                                      context)
+                                                  .add(DeleteCart(
+                                                      itemsId: itemsId!,
+                                                      addCart: false));
+
+                                              listScreen.remove(itemsId);
+                                              listString =
+                                                  listScreen.toString();
+                                            });
+                                          }
+                                        },
+                                      ),
+                                    );
+                                  });
+                            }
+                            return Container(
+                                color: Colors.transparent,
+                                height: height * 0.42,
+                                width: width,
+                                child: Center(
+                                  child: Lottie.asset(
+                                      'assets/lottie/loading.json'),
+                                ));
+                          },
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
