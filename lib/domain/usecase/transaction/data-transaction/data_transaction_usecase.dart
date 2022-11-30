@@ -12,3 +12,22 @@ class DataTransactionUseCase {
     return domainRepository.getDataTransaction();
   }
 }
+
+class CancelTransactionPaymentUseCase {
+  final DomainRepository domainRepository;
+
+  const CancelTransactionPaymentUseCase(this.domainRepository);
+
+  Future<Either<ServerFailure, String>> execute(String itemsId) async {
+    return domainRepository.cancelTransactionPayment(itemsId);
+  }
+}
+
+class FinishTransactionPaymentUseCase {
+  final DomainRepository domainRepository;
+  const FinishTransactionPaymentUseCase(this.domainRepository);
+
+  Future<Either<ServerFailure, String>> execute(String itemsId) async {
+    return domainRepository.finishTransactionPayment(itemsId);
+  }
+}

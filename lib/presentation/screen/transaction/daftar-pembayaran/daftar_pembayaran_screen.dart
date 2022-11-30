@@ -445,7 +445,9 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:sembako_bintang/data/utils/helper/constanta_string.dart';
+import 'package:sembako_bintang/data/utils/helper/dialog.dart';
 import 'package:sembako_bintang/data/utils/themes/color.dart';
 import 'package:sembako_bintang/data/utils/themes/text.dart';
 import 'package:sembako_bintang/presentation/bloc/data-transaction/data_transaction_bloc.dart';
@@ -461,6 +463,101 @@ class DaftarPembayaranScreen extends StatefulWidget {
 }
 
 class _DaftarPembayaranScreenState extends State<DaftarPembayaranScreen> {
+  final dialog = DialogHelper();
+  processDialog(String title, String bodyText, String itemsId) {
+    Widget acceptButton = TextButton(
+      onPressed: () async {
+        BlocProvider.of<DataTransactionBloc>(context)
+            .add(CancelPaymentTransaction(itemsId: itemsId));
+
+        Navigator.pop(context);
+      },
+      child: Text("OK", style: ThemeText.regularBold),
+    );
+    Widget cancelButton = TextButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: Text("Cancel", style: ThemeText.regularBold),
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Center(
+        child: Text(title, style: ThemeText.regularBold),
+      ),
+      content: SizedBox(
+        height: 160,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+                height: 100,
+                width: 100,
+                child: Lottie.asset("assets/lottie/make_sure.json")),
+            Text(bodyText, style: ThemeText.regular),
+          ],
+        ),
+      ),
+      actions: [
+        acceptButton,
+        cancelButton,
+      ],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
+  }
+
+  finisihProccessDialog(String title, String bodyText, String itemsId) {
+    Widget acceptButton = TextButton(
+      onPressed: () async {
+        BlocProvider.of<DataTransactionBloc>(context)
+            .add(FinishPaymentTransaction(itemsId: itemsId));
+
+        Navigator.pop(context);
+      },
+      child: Text("OK", style: ThemeText.regularBold),
+    );
+    Widget cancelButton = TextButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: Text("Cancel", style: ThemeText.regularBold),
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Center(
+        child: Text(title, style: ThemeText.regularBold),
+      ),
+      content: SizedBox(
+        height: 160,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+                height: 100,
+                width: 100,
+                child: Lottie.asset("assets/lottie/make_sure.json")),
+            Text(bodyText, style: ThemeText.regular),
+          ],
+        ),
+      ),
+      actions: [
+        acceptButton,
+        cancelButton,
+      ],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -478,123 +575,204 @@ class _DaftarPembayaranScreenState extends State<DaftarPembayaranScreen> {
           ),
         ),
       ),
-      body: BlocBuilder<DataTransactionBloc, DataTransactionState>(
-        builder: (context, state) {
-          if (state is DataTransactionSuccess) {
-            var items = state.value;
-
-            items!.sort(((a, b) => ("${b.transactionDate!}${b.transactionTime}")
-                .compareTo("${a.transactionDate!}${a.transactionTime}")));
-
-            return ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: items.length,
-                itemBuilder: ((context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => DetailPembayaranScreen(
-                                    data: items[index].data,
-                                    orderId: items[index].orderId!,
-                                    priceTotal: items[index].totalPrice!,
-                                    transactionDate:
-                                        items[index].transactionDate!,
-                                  ))));
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                      height: height * 0.15,
-                      width: width,
-                      decoration: BoxDecoration(
-                          color: ThemeColor.whiteColor,
-                          boxShadow: [
-                            BoxShadow(
-                              color: ThemeColor.blackColor.withOpacity(0.2),
-                              offset: const Offset(0, 2),
-                              blurRadius: 1,
-                              spreadRadius: 0,
-                            )
-                          ]),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            height: height * 0.15,
-                            width: width * 0.35,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                top: 20,
-                                bottom: 20,
-                                left: 10,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Order #${items[index].orderId}",
-                                    style: ThemeText.regularBold,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Number of items",
-                                        style: ThemeText.regularBold,
-                                      ),
-                                      Text(
-                                        items[index].data.length.toString(),
-                                        style: ThemeText.regular,
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: height * 0.15,
-                            width: width * 0.3,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 20, bottom: 15, right: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    items[index].transactionTime!,
-                                    style: ThemeText.regularBold,
-                                  ),
-                                  Text(
-                                    NumberFormat.currency(
-                                            decimalDigits: 0, symbol: 'IDR ')
-                                        .format(int.tryParse(
-                                            items[index].totalPrice!)),
-                                    style: ThemeText.regularBold,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                }));
+      body: BlocListener<DataTransactionBloc, DataTransactionState>(
+        listener: (context, state) {
+          if (state is CancelPaymentTransactionSuccess) {
+            BlocProvider.of<DataTransactionBloc>(context)
+                .add(FetchDataTransaction());
           }
-          return SizedBox(
-            width: width,
-            height: height,
-            child: const SkeletonAvatar(),
-          );
+          if (state is FinishPaymentTransactionSuccess) {
+            BlocProvider.of<DataTransactionBloc>(context)
+                .add(FetchDataTransaction());
+          }
         },
+        child: BlocBuilder<DataTransactionBloc, DataTransactionState>(
+          builder: (context, state) {
+            if (state is DataTransactionSuccess) {
+              var items = state.value!.where((element) => element.status!.contains("Unpaid")).toList();
+
+              items.sort((a, b) {
+                int aDate = DateTime.parse(a.transactionDate ?? '')
+                    .microsecondsSinceEpoch;
+                int bDate = DateTime.parse(b.transactionDate ?? '')
+                    .microsecondsSinceEpoch;
+                return bDate.compareTo(aDate);
+              });
+
+              return ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: items.length,
+                  itemBuilder: ((context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => DetailPembayaranScreen(
+                                      data: items[index].data,
+                                      orderId: items[index].orderId!,
+                                      priceTotal: items[index].totalPrice!,
+                                      transactionDate:
+                                          items[index].transactionDate!,
+                                    ))));
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        height: height * 0.15,
+                        width: width,
+                        decoration: BoxDecoration(
+                            color: ThemeColor.whiteColor,
+                            boxShadow: [
+                              BoxShadow(
+                                color: ThemeColor.blackColor.withOpacity(0.2),
+                                offset: const Offset(0, 2),
+                                blurRadius: 1,
+                                spreadRadius: 0,
+                              )
+                            ]),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              height: height * 0.15,
+                              width: width * 0.35,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 20,
+                                  bottom: 20,
+                                  left: 10,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Order #${items[index].orderId}",
+                                      style: ThemeText.regularBold,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Number of items",
+                                          style: ThemeText.regularBold,
+                                        ),
+                                        Text(
+                                          items[index].data.length.toString(),
+                                          style: ThemeText.regular,
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: height * 0.15,
+                              width: width * 0.23,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 20, bottom: 15),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      NumberFormat.currency(
+                                              decimalDigits: 0, symbol: 'IDR ')
+                                          .format(int.tryParse(
+                                              items[index].totalPrice!)),
+                                      style: ThemeText.regularBold,
+                                    ),
+                                    SizedBox(
+                                      height: height * 0.05,
+                                      width: width * 0.28,
+                                      child: ElevatedButton(
+                                          style: ButtonStyle(
+                                              shape: MaterialStateProperty.all(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              17))),
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green)),
+                                          onPressed: () {
+                                            finisihProccessDialog(
+                                                "Finish Transaction",
+                                                "Anda Yakin ingin menyelesaikan transaksi ?",
+                                                items[index].id!);
+                                          },
+                                          child: Text(
+                                            "Finish",
+                                            style: ThemeText.buttonStartedText,
+                                          )),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: height * 0.15,
+                              width: width * 0.3,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 20, bottom: 15, right: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      items[index].transactionTime!,
+                                      style: ThemeText.regularBold,
+                                    ),
+                                    SizedBox(
+                                      height: height * 0.05,
+                                      width: width * 0.28,
+                                      child: ElevatedButton(
+                                          style: ButtonStyle(
+                                              shape: MaterialStateProperty.all(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              17))),
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.red)),
+                                          onPressed: () {
+                                            processDialog(
+                                                "Cancel Transaction",
+                                                "Anda yakin ingin membatalkan pembayaran ?",
+                                                items[index].id!);
+                                          },
+                                          child: Text(
+                                            "Cancel",
+                                            style: ThemeText.buttonStartedText,
+                                          )),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }));
+            }
+            return Container(
+                color: Colors.transparent,
+                height: height,
+                width: width,
+                child: Center(
+                  child: Lottie.asset('assets/lottie/loading.json'),
+                ));
+          },
+        ),
       ),
       bottomNavigationBar: SizedBox(
         height: height * 0.2,

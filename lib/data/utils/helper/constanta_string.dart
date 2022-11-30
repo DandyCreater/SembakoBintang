@@ -4,6 +4,7 @@ const String getStartedScreen = '/getStartedScreen';
 
 //HomePage
 const String homepageScreen = '/homepageScreen';
+const String daftarPembayaranHomepageScreen = '/daftarPembayaranHomePageScreen';
 
 //Transaction
 const String transactionPageScreen = '/transactionPageScreen';

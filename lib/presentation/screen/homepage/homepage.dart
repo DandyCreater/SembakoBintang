@@ -29,7 +29,7 @@ class HomePageScreen extends StatelessWidget {
         child: BlocListener<DataTransactionBloc, DataTransactionState>(
           listener: (context, state) {
             if (state is DataTransactionSuccess) {
-              Navigator.pushNamed(context, daftarPembayaranScreen);
+              Navigator.pushNamed(context, daftarPembayaranHomepageScreen);
             }
           },
           child: Column(

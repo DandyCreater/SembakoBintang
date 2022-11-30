@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
@@ -37,6 +38,8 @@ abstract class RemoteDataSources {
   Future clearCartItem();
   Future getTransactionData();
   Future generateMidTrans();
+  Future cancelTransactionPayment(String itemsId);
+  Future finishTransactionPayment(String itemsId);
 
   //Reports Area
   Future filterDatabyDate(DateTime startDate, DateTime endDate);
@@ -331,27 +334,43 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
         await firestore.collection('cart').get();
     QuerySnapshot<Map<String, dynamic>> dataTransactionItem =
         await firestore.collection('transaction').get();
+
     String result = 'fail';
     String orderId = '';
+    var randomNum = Random();
+    var randomNum2 = Random();
     try {
+      var dateFormatted =
+          DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(DateTime.now());
       DateTime dateTime = DateTime.now();
-      String dateFormat = DateFormat('yyyy-MM-dd hh:mm:ss').format(dateTime);
+      String dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
       String timeFormat = DateFormat('HH:mm').format(dateTime);
 
-      List<CheckOutResponseModel>? allData = dataTransactionItem.docs
-          .map((e) => CheckOutResponseModel.fromJson(e))
+      List<DataTransactionResponseModel>? allData = dataTransactionItem.docs
+          .map((e) => DataTransactionResponseModel.fromJson(e))
           .toList();
 
       var dataCart =
           dataItem.docs.map((e) => CartResponseModel.fromJson(e)).toList();
 
-      if (allData == null) {
+      for (var i = 0; i < allData.length; i++) {
+        debugPrint(allData[i].transactionDate.toString());
+      }
+
+      allData.sort((a, b) {
+        int aDate =
+            DateTime.parse(a.transactionDate ?? '').microsecondsSinceEpoch;
+        int bDate =
+            DateTime.parse(b.transactionDate ?? '').microsecondsSinceEpoch;
+        return aDate.compareTo(bDate);
+      });
+
+      if (allData.last.orderId == null) {
         orderId = "1";
       } else {
-        var length = allData.length;
-        var orderLength = length + 1;
-
-        orderId = orderLength.toString();
+        var orderIdInt = int.tryParse(allData.last.orderId!);
+        var orderIdCount = orderIdInt! + 1;
+        orderId = orderIdCount.toString();
       }
 
       var data = {
@@ -361,6 +380,9 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
         'numberOfItems': value.numberOfItems,
         'totalPrice': value.totalPrice,
         'status': 'Unpaid',
+        'midTransCode':
+            'sembakobintangs${randomNum.nextInt(1000)}${randomNum2.nextInt(50)}',
+        'dateFormatMidtrans': '$dateFormatted',
         'data': dataCart.map((e) => e.toMap()).toList(),
       };
 
@@ -409,9 +431,46 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
   }
 
   @override
+  Future cancelTransactionPayment(String itemsId) async {
+    CollectionReference collectionReference =
+        FirebaseFirestore.instance.collection('transaction');
+    String? result = 'fail';
+    try {
+      await collectionReference.doc(itemsId).delete();
+      result = "OK";
+      return result;
+    } catch (e) {
+      debugPrint("Cancel Transaction Error $e");
+    }
+  }
+
+  @override
+  Future finishTransactionPayment(String itemsId) async {
+    CollectionReference collectionReference =
+        FirebaseFirestore.instance.collection('transaction');
+    String? result = 'fail';
+    try {
+
+      var data = {
+        'status' : 'Paid'
+      };
+
+      await collectionReference.doc(itemsId).update(data);
+      result = "OK";
+      return result;
+    } catch (e) {
+      debugPrint("Finish Transaction Error $e");
+    }
+  }
+
+  @override
   Future getTransactionData() async {
-    QuerySnapshot<Map<String, dynamic>> dataItem =
+    QuerySnapshot<Map<String, dynamic>>? dataItem =
         await firestore.collection('transaction').get();
+    QuerySnapshot<Map<String, dynamic>>? dataUpdate =
+        await firestore.collection('transaction').get();
+    CollectionReference collectionReference =
+        FirebaseFirestore.instance.collection('transaction');
 
     try {
       final allData = dataItem.docs
@@ -428,7 +487,6 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
   @override
   Future generateMidTrans() async {
     Dio dio = Dio();
-    DateTime dateTime = DateTime.now();
 
     try {
       var dateFormatted =
@@ -447,14 +505,14 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
 
       var envelope = {
         "transaction_details": {
-          "order_id": "sembakobintang-${jsonData['orderId']}",
+          "order_id": jsonData['midTransCode'],
           "gross_amount": int.tryParse(jsonData['totalPrice']),
-          "payment_link_id": "for-sembakobintang-${jsonData['orderId']}"
+          "payment_link_id": "for-${jsonData['midTransCode']}"
         },
         "credit_card": {"secure": true},
         "usage_limit": 1,
         "expiry": {
-          "start_time": "$dateFormatted",
+          "start_time": "${jsonData['dateFormatMidtrans']}",
           "duration": 20,
           "unit": "days"
         },
@@ -468,7 +526,7 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
           "notes":
               "Thank you for your purchase. Please follow the instructions to pay."
         },
-        "custom_field1": "",
+        "custom_field1": jsonData['midTransCode'],
         "custom_field2": "",
         "custom_field3": ""
       };
@@ -485,6 +543,7 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
 
       if (response.statusCode == 200) {
         var result = MidtransResponseModel.fromJson(response.data);
+        debugPrint(response.data.toString());
 
         return result;
       } else {

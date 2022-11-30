@@ -3,6 +3,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:sembako_bintang/data/utils/helper/constanta_string.dart';
 import 'package:sembako_bintang/data/utils/themes/color.dart';
 import 'package:sembako_bintang/data/utils/themes/text.dart';
+import 'package:sembako_bintang/presentation/screen/homepage/daftar_pembayaran_homepage.dart';
 import 'package:sembako_bintang/presentation/screen/homepage/homepage.dart';
 import 'package:sembako_bintang/presentation/screen/items/edit-item/item_edit_screen.dart';
 import 'package:sembako_bintang/presentation/screen/items/itemspage_screen.dart';
@@ -33,6 +34,9 @@ class Routes {
         return MaterialPageRoute(
           builder: (_) => const HomePageScreen(),
         );
+      case daftarPembayaranHomepageScreen:
+        return MaterialPageRoute(
+            builder: (_) => const DaftarPembayaranHomepage());
 
       //Transaction Area
       case transactionPageScreen:
@@ -71,9 +75,6 @@ class Routes {
         return MaterialPageRoute(
           builder: (_) => const ReportPageScreen(),
         );
-      // case detailFilterReportScreen:
-      //   return MaterialPageRoute(
-      //       builder: (_) =>  DetailFilterReportScreen());
 
       default:
         return MaterialPageRoute(

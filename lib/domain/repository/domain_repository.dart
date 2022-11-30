@@ -45,6 +45,10 @@ abstract class DomainRepository {
   Future<Either<ServerFailure, List<DataTransactionEntity>>>
       getDataTransaction();
   Future<Either<ServerFailure, MidtransEntity>> midTransGenerate();
+  Future<Either<ServerFailure, String>> cancelTransactionPayment(
+      String itemsId);
+  Future<Either<ServerFailure, String>> finishTransactionPayment(
+      String itemsId);
 
   //Reports
   Future<Either<ServerFailure, List<DataTransactionEntity>>> filterItemByDate(

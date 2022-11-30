@@ -10,7 +10,9 @@ class DataTransactionResponseModel {
   final String? transactionDate;
   final String? numberOfItems;
   final String? totalPrice;
+  final String? midTransCode;
   final String? status;
+  final String? dateFormatMidtrans;
   final List<dynamic> data;
 
   const DataTransactionResponseModel(
@@ -20,6 +22,8 @@ class DataTransactionResponseModel {
       required this.transactionDate,
       required this.numberOfItems,
       required this.totalPrice,
+      required this.midTransCode,
+      required this.dateFormatMidtrans,
       required this.status,
       required this.data});
 
@@ -29,11 +33,13 @@ class DataTransactionResponseModel {
       id: doc.id,
       orderId: doc.data()!['orderId'],
       transactionTime: doc.data()!['transactionTime'],
+      midTransCode: doc.data()!['midTransCode'],
       transactionDate: doc.data()!['transactionDate'],
       numberOfItems: doc.data()!['numberOfItems'],
       totalPrice: doc.data()!['totalPrice'],
       status: doc.data()!['status'],
       data: doc.data()!['data'],
+      dateFormatMidtrans: doc.data()!['dateFormatMidtrans'],
     );
   }
 
@@ -45,6 +51,9 @@ class DataTransactionResponseModel {
         transactionDate: this.transactionDate,
         numberOfItems: this.numberOfItems,
         totalPrice: this.totalPrice,
-        data: this.data, status: this.status);
+        data: this.data,
+        status: this.status,
+        midTransCode: this.midTransCode,
+        dateFormatMidtrans: this.dateFormatMidtrans);
   }
 }

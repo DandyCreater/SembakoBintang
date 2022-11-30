@@ -266,6 +266,37 @@ class DataRepositoryImpl extends DomainRepository {
   }
 
   @override
+  Future<Either<ServerFailure, String>> cancelTransactionPayment(
+      String itemsId) async {
+    try {
+      String result = await remoteDataSources.cancelTransactionPayment(itemsId);
+      if (result == "OK") {
+        return right(result);
+      }
+      return left(ServerFailure("Cancel Transaction Failed"));
+    } catch (e) {
+      debugPrint("Cancel Transaction Error Data Repository $e");
+      return Left(ServerFailure('Cancel Transaction Error Data Repository $e'));
+    }
+  }
+
+  @override
+  Future<Either<ServerFailure, String>> finishTransactionPayment(
+      String itemsId) async {
+    try {
+      String result = await remoteDataSources.finishTransactionPayment(itemsId);
+      if (result == "OK") {
+        return right(result);
+      } else {
+        return left(ServerFailure("Finish Transaction Failed"));
+      }
+    } catch (e) {
+      debugPrint("Finish Transaction Error Data Repository $e");
+      return Left(ServerFailure("Finish Transaction Error Data Repository $e"));
+    }
+  }
+
+  @override
   Future<Either<ServerFailure, List<DataTransactionEntity>>>
       getDataTransaction() async {
     try {

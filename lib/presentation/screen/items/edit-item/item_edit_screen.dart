@@ -178,8 +178,7 @@ class _ItemEditScreenState extends State<ItemEditScreen> {
                               BlocProvider.of<GetItemBloc>(context)
                                   .add(FetchGetItem());
                             }
-                            // BlocProvider.of<GetItemBloc>(context).add(
-                            //     SearchItem(itemName: searchController.text));
+                           
                           },
                           decoration: InputDecoration(
                               suffixIcon: IconButton(

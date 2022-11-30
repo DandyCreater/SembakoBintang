@@ -34,7 +34,7 @@ Future<void> init(String baseUrl) async {
         sl(),
       ));
   sl.registerFactory(() => CheckoutItemBloc(sl(), sl()));
-  sl.registerFactory(() => DataTransactionBloc(sl()));
+  sl.registerFactory(() => DataTransactionBloc(sl(), sl(), sl()));
   sl.registerFactory(() => ReportsFilterBloc(sl()));
   sl.registerFactory(() => MidtransBloc(sl()));
 
@@ -59,6 +59,9 @@ Future<void> init(String baseUrl) async {
   sl.registerLazySingleton(() => ClearCartItemsUseCase(sl()));
   sl.registerLazySingleton(() => DataTransactionUseCase(sl()));
   sl.registerLazySingleton(() => MidtransUseCase(sl()));
+  sl.registerLazySingleton(() => CancelTransactionPaymentUseCase(sl()));
+  sl.registerLazySingleton(() => FinishTransactionPaymentUseCase(sl()));
+
   //Reports UseCase
   sl.registerLazySingleton(() => FilterDataByDateUseCase(sl()));
 
