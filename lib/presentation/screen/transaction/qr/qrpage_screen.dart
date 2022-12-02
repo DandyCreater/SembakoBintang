@@ -11,7 +11,8 @@ import 'package:sembako_bintang/presentation/bloc/midtrans-transaction/midtrans_
 import 'package:skeletons/skeletons.dart';
 
 class QrPageScreen extends StatelessWidget {
-  const QrPageScreen({super.key});
+  final String? mindTransLink;
+  const QrPageScreen({required this.mindTransLink, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,20 +49,8 @@ class QrPageScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(17),
                         color: ThemeColor.whiteColor),
                     child: Center(
-                      child: BlocBuilder<MidtransBloc, MidtransState>(
-                        builder: (context, state) {
-                          if (state is MidtransSuccess) {
-                            return QrImage(
-                              data:
-                                  state.value.paymentUrl!,
-                            );
-                          }
-                          return SizedBox(
-                            height: height * 0.4,
-                            width: width,
-                            child: const SkeletonAvatar(),
-                          );
-                        },
+                      child: QrImage(
+                        data: mindTransLink!,
                       ),
                     ),
                   ),

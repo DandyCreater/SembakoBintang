@@ -47,10 +47,10 @@ class Routes {
         return MaterialPageRoute(
           builder: (_) => const CartPageScreen(),
         );
-      case qrPageScreen:
-        return MaterialPageRoute(
-          builder: (_) => const QrPageScreen(),
-        );
+      // case qrPageScreen:
+        // return MaterialPageRoute(
+        //   builder: (_) => const QrPageScreen(),
+        // );
       case daftarPembayaranScreen:
         return MaterialPageRoute(
           builder: (_) => const DaftarPembayaranScreen(),

@@ -13,6 +13,7 @@ class DataTransactionResponseModel {
   final String? midTransCode;
   final String? status;
   final String? dateFormatMidtrans;
+  final String? midtransLink;
   final List<dynamic> data;
 
   const DataTransactionResponseModel(
@@ -25,6 +26,7 @@ class DataTransactionResponseModel {
       required this.midTransCode,
       required this.dateFormatMidtrans,
       required this.status,
+      required this.midtransLink,
       required this.data});
 
   factory DataTransactionResponseModel.fromJson(
@@ -40,6 +42,7 @@ class DataTransactionResponseModel {
       status: doc.data()!['status'],
       data: doc.data()!['data'],
       dateFormatMidtrans: doc.data()!['dateFormatMidtrans'],
+      midtransLink: doc.data()!['midtransLink'],
     );
   }
 
@@ -54,6 +57,6 @@ class DataTransactionResponseModel {
         data: this.data,
         status: this.status,
         midTransCode: this.midTransCode,
-        dateFormatMidtrans: this.dateFormatMidtrans);
+        dateFormatMidtrans: this.dateFormatMidtrans, midtransLink: this.midtransLink);
   }
 }

@@ -9,7 +9,7 @@ const String daftarPembayaranHomepageScreen = '/daftarPembayaranHomePageScreen';
 //Transaction
 const String transactionPageScreen = '/transactionPageScreen';
 const String cartPageScreen = '/cartPageScreen';
-const String qrPageScreen = '/qrPageScreen';
+// const String qrPageScreen = '/qrPageScreen';
 const String daftarPembayaranScreen = '/daftarPembayaranScreen';
 
 //Items

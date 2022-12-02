@@ -60,7 +60,7 @@ class _DaftarPembayaranHomepageState extends State<DaftarPembayaranHomepage> {
                                     orderId: items[index].orderId!,
                                     priceTotal: items[index].totalPrice!,
                                     transactionDate:
-                                        items[index].transactionDate!,
+                                        items[index].transactionDate!, midTransLink: items[index].midtransLink!,
                                   ))));
                     },
                     child: Container(

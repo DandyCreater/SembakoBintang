@@ -340,12 +340,14 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
     var randomNum = Random();
     var randomNum2 = Random();
     try {
-      var dateFormatted =
-          DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(DateTime.now());
+      // var dateFormatted =
+      //     DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(DateTime.now());
       DateTime dateTime = DateTime.now();
       String dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
       String timeFormat = DateFormat('HH:mm').format(dateTime);
 
+      debugPrint(dateFormat);
+      debugPrint(timeFormat);
       List<DataTransactionResponseModel>? allData = dataTransactionItem.docs
           .map((e) => DataTransactionResponseModel.fromJson(e))
           .toList();
@@ -382,7 +384,6 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
         'status': 'Unpaid',
         'midTransCode':
             'sembakobintangs${randomNum.nextInt(1000)}${randomNum2.nextInt(50)}',
-        'dateFormatMidtrans': '$dateFormatted',
         'data': dataCart.map((e) => e.toMap()).toList(),
       };
 
@@ -450,10 +451,7 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
         FirebaseFirestore.instance.collection('transaction');
     String? result = 'fail';
     try {
-
-      var data = {
-        'status' : 'Paid'
-      };
+      var data = {'status': 'Paid'};
 
       await collectionReference.doc(itemsId).update(data);
       result = "OK";
@@ -467,8 +465,7 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
   Future getTransactionData() async {
     QuerySnapshot<Map<String, dynamic>>? dataItem =
         await firestore.collection('transaction').get();
-    QuerySnapshot<Map<String, dynamic>>? dataUpdate =
-        await firestore.collection('transaction').get();
+
     CollectionReference collectionReference =
         FirebaseFirestore.instance.collection('transaction');
 
@@ -486,6 +483,10 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
 
   @override
   Future generateMidTrans() async {
+    QuerySnapshot<Map<String, dynamic>>? dataUpdate =
+        await firestore.collection('transaction').get();
+    CollectionReference collectionReference =
+        FirebaseFirestore.instance.collection('transaction');
     Dio dio = Dio();
 
     try {
@@ -512,11 +513,17 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
         "credit_card": {"secure": true},
         "usage_limit": 1,
         "expiry": {
-          "start_time": "${jsonData['dateFormatMidtrans']}",
+          "start_time": "$dateFormatted",
           "duration": 20,
           "unit": "days"
         },
-        "enabled_payments": ["credit_card", "bca_va", "indomaret"],
+        "enabled_payments": [
+          "credit_card",
+          "bca_va",
+          "indomaret",
+          "gopay",
+          "shopeepay"
+        ],
         "item_details": listItemTransaction.map((e) => e.toMap()).toList(),
         "customer_details": {
           "first_name": "Michael",
@@ -544,6 +551,23 @@ class RemoteDataSourcesImpl implements RemoteDataSources {
       if (response.statusCode == 200) {
         var result = MidtransResponseModel.fromJson(response.data);
         debugPrint(response.data.toString());
+
+        final allData = dataUpdate.docs
+            .map((e) => DataTransactionResponseModel.fromJson(e))
+            .toList();
+
+        var check = allData
+            .where((element) =>
+                element.midTransCode!.contains(jsonData['midTransCode']))
+            .toList();
+        List<DataTransactionResponseModel> data = [];
+        for (var itemsData in check) {
+          data.add(itemsData);
+        }
+
+        var updateData = {'midtransLink': result.paymentUrl};
+
+        await collectionReference.doc(data.first.id).update(updateData);
 
         return result;
       } else {

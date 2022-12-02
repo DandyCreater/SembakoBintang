@@ -16,6 +16,7 @@ import 'package:sembako_bintang/presentation/bloc/checkout-bloc/checkout_item_bl
 import 'package:sembako_bintang/presentation/bloc/get-item/get_item_bloc.dart';
 import 'package:sembako_bintang/presentation/bloc/midtrans-transaction/midtrans_bloc.dart';
 import 'package:sembako_bintang/presentation/screen/transaction/cart/widget/itemcard_transaction.dart';
+import 'package:sembako_bintang/presentation/screen/transaction/qr/qrpage_screen.dart';
 import 'package:skeletons/skeletons.dart';
 
 class CartPageScreen extends StatefulWidget {
@@ -133,13 +134,18 @@ class _CartPageScreenState extends State<CartPageScreen> {
                   children: [
                     BlocListener<MidtransBloc, MidtransState>(
                       listener: (context, state) {
-                        if(state is MidtransLoading){
+                        if (state is MidtransLoading) {
                           dialog.loadingDialog(context, height, width);
                           Future.delayed(const Duration(seconds: 2));
                         }
                         if (state is MidtransSuccess) {
                           Navigator.pop(context);
-                          Navigator.pushNamed(context, qrPageScreen);
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => QrPageScreen(
+                                      mindTransLink: state.value.paymentUrl))),
+                              (route) => false);
                         }
                       },
                       child: BlocListener<CheckoutItemBloc, CheckoutItemState>(
@@ -209,12 +215,12 @@ class _CartPageScreenState extends State<CartPageScreen> {
                                         borderRadius:
                                             BorderRadius.circular(17)))),
                             onPressed: () {
-                              BlocProvider.of<CheckoutItemBloc>(context).add(
-                                  FetchCheckOut(
+                              BlocProvider.of<CheckoutItemBloc>(context)
+                                  .add(FetchCheckOut(
                                       value: CheckOutParameterPost(
-                                          numberOfItems:
-                                              listPrice.length.toString(),
-                                          totalPrice: priceFinal.toString())));
+                                numberOfItems: listPrice.length.toString(),
+                                totalPrice: priceFinal.toString(),
+                              )));
                             },
                             child: Text(
                               "Checkout",

@@ -32,6 +32,8 @@ class CheckOutParameterPost {
   final String? numberOfItems;
   final String? totalPrice;
 
-  const CheckOutParameterPost(
-      {required this.numberOfItems, required this.totalPrice});
+  const CheckOutParameterPost({
+    required this.numberOfItems,
+    required this.totalPrice,
+  });
 }

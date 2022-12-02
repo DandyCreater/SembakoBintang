@@ -10,6 +10,7 @@ class DataTransactionEntity {
   final String? midTransCode;
   final String? dateFormatMidtrans;
   final String? status;
+  final String? midtransLink;
   final List<dynamic> data;
 
   const DataTransactionEntity(
@@ -22,7 +23,9 @@ class DataTransactionEntity {
       required this.midTransCode,
       required this.dateFormatMidtrans,
       required this.status,
-      required this.data});
+      required this.data,
+      required this.midtransLink,
+      });
 
   factory DataTransactionEntity.fromJson(
       DocumentSnapshot<Map<String, dynamic>> doc) {
@@ -35,7 +38,7 @@ class DataTransactionEntity {
       totalPrice: doc.data()!['totalPrice'],
       midTransCode: doc.data()!['midTransCode'],
       status: doc.data()!['status'],
-      data: doc.data()!['data'], dateFormatMidtrans: doc.data()!['dateFormatMidtrans'],
+      data: doc.data()!['data'], dateFormatMidtrans: doc.data()!['dateFormatMidtrans'], midtransLink: doc.data()!['midtransLink'],
     );
   }
 }
